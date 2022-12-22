@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import sys
 import pandas as pd
@@ -13,6 +14,7 @@ np.set_printoptions(threshold=sys.maxsize) # print entire array
 df = pd.read_csv('gnc_sim.csv') # convert csv file into dataframe
 data = df.loc[:,:].to_numpy() # convert dataframe into numpy array
 time_data = data[:,0]
+time_steps = np.diff(time_data) # 1 unit shorter than time_data
 alt_data = data[:,1]
 accel_z_data = data[:,2]
 ind = 0 # global variable that keeps track of time
@@ -38,8 +40,12 @@ while True:
     while accel_z >= 10:
         count = count + 1
 
+        time.sleep(time_steps[ind])
         ind = ind + 1
-        print(time_data[ind])
+        s1 = time_data[ind]
+        s2 = alt_data[ind]
+        s3 = accel_z_data[ind]
+        print(f"{s1} s    {s2} m    {s3} m/s^2")
 
         if count >= 8:
             t = get_time(ind)
@@ -52,14 +58,22 @@ while True:
     if breakLoop == True:
         break
 
+    time.sleep(time_steps[ind])
     ind = ind + 1
-    print(time_data[ind])
+    s1 = time_data[ind]
+    s2 = alt_data[ind]
+    s3 = accel_z_data[ind]
+    print(f"{s1} s    {s2} m    {s3} m/s^2")
 
 ##### 2.Powered ascent #####
 print("Current state: Powered ascent...")
 for x in range(0, 10): # delay to ensure initial negative accel z isnt captured
+    time.sleep(time_steps[ind])
     ind = ind + 1
-    print(time_data[ind])
+    s1 = time_data[ind]
+    s2 = alt_data[ind]
+    s3 = accel_z_data[ind]
+    print(f"{s1} s    {s2} m    {s3} m/s^2")
 
 while True:
 
@@ -70,8 +84,12 @@ while True:
         print(f"Engine burnout detected at {t} s")
         break
 
+    time.sleep(time_steps[ind])
     ind = ind + 1
-    print(time_data[ind])
+    s1 = time_data[ind]
+    s2 = alt_data[ind]
+    s3 = accel_z_data[ind]
+    print(f"{s1} s    {s2} m    {s3} m/s^2")
 
 ##### 3.Unpowered ascent #####
 # State transition: detect apogee
@@ -82,8 +100,12 @@ while True:
     # Detect state transition: apogee
 
     for x in range(0,10):
+        time.sleep(time_steps[ind])
         ind = ind + 1
-        print(time_data[ind])
+        s1 = time_data[ind]
+        s2 = alt_data[ind]
+        s3 = accel_z_data[ind]
+        print(f"{s1} s    {s2} m    {s3} m/s^2")
 
     current_alt = get_alt(ind)
     if current_alt < old_alt:
@@ -101,8 +123,12 @@ while True:
 
     # Detect state transition: chute deployment
 
+    time.sleep(time_steps[ind])
     ind = ind + 1
-    print(time_data[ind])
+    s1 = time_data[ind]
+    s2 = alt_data[ind]
+    s3 = accel_z_data[ind]
+    print(f"{s1} s    {s2} m    {s3} m/s^2")
 
     alt = get_alt(ind)
     if alt < apogee:
@@ -115,8 +141,12 @@ while True:
 print("Current state: Chute descent")
 while True:
 
+    time.sleep(time_steps[ind])
     ind = ind + 1
-    print(time_data[ind])
+    s1 = time_data[ind]
+    s2 = alt_data[ind]
+    s3 = accel_z_data[ind]
+    print(f"{s1} s    {s2} m    {s3} m/s^2")
 
     # Detect state transition: landing
     alt = get_alt(ind)
